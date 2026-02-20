@@ -18,7 +18,6 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { label: '서비스', id: 'services' },
     { label: '시공사진', id: 'gallery' },
     { label: '고객후기', id: 'reviews' },
     { label: '문의하기', id: 'contact' },

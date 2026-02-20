@@ -2,36 +2,43 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const advantages = [
+const features = [
   {
-    icon: '🎨',
-    title: '타고난 색감 감각',
-    desc: '공간의 분위기와 조명까지 고려한 섬세한 색상 제안으로 인테리어 완성도를 높여드립니다.',
+    title: '공간을 위한 색감 제안',
+    desc: '공간의 채광, 바닥재, 가구와의 조화를 고려하여 최적의 벽지 컬러와 텍스처를 제안합니다.',
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+      </svg>
+    ),
   },
   {
-    icon: '🔍',
-    title: '꼼꼼한 마감 처리',
-    desc: '작은 모서리 하나, 이음새 하나도 놓치지 않는 집중력으로 완벽한 마감을 보장합니다.',
+    title: '공간의 격을 높이는 디테일',
+    desc: '작은 마감 하나도 놓치지 않는 꼼꼼함으로 프리미엄 퀄리티의 결과물을 완성합니다.',
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+      </svg>
+    ),
   },
   {
-    icon: '💬',
-    title: '편안한 소통',
-    desc: '집 주인의 취향과 마음을 충분히 경청하고, 원하는 분위기를 정확히 이해하여 시공합니다.',
+    title: '진정성 있는 소통',
+    desc: '고객님의 라이프스타일과 취향을 깊이 이해하고, 가장 적합한 방향을 함께 고민합니다.',
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+      </svg>
+    ),
   },
   {
-    icon: '✨',
-    title: '깔끔한 시공 환경',
-    desc: '시공 전·중·후 언제나 깨끗하게 정리하여 불편함 없는 쾌적한 환경을 유지합니다.',
-  },
-  {
-    icon: '🏡',
-    title: '생활자 시선의 제안',
-    desc: '실제 집에서 생활하는 사람의 관점으로 동선과 인테리어를 함께 고려한 제안을 드립니다.',
-  },
-  {
-    icon: '🛡️',
-    title: '믿을 수 있는 A/S',
-    desc: '시공 후에도 책임지는 든든한 사후관리로 언제든지 문의하시면 빠르게 해결해드립니다.',
+    title: '책임 있는 시공 보장',
+    desc: '도배 전 기초 작업부터 시공 후 마무리까지 변함없는 책임감으로 함께합니다.',
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
   },
 ];
 
@@ -56,40 +63,42 @@ export default function About() {
       style={{ background: '#FAF7F2' }}
     >
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span
-            className="inline-block text-sm font-medium px-4 py-1.5 rounded-full mb-4"
-            style={{ background: 'rgba(196,168,130,0.2)', color: '#6B5344' }}
-          >
-            왜 감성도배인가요?
-          </span>
+        {/* 헤더 */}
+        <div
+          className={`text-center mb-14 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
           <h2 className="text-4xl font-black mb-4" style={{ color: '#3D2B1F' }}>
-            여성 도배사만의 <span style={{ color: '#C4A882' }}>특별한 강점</span>
+            왜 <span style={{ color: '#C4A882' }}>감성도배</span>일까요?
           </h2>
-          <p className="text-base max-w-2xl mx-auto leading-relaxed" style={{ color: '#6B5344' }}>
-            단순히 벽지를 바르는 것이 아닙니다. 공간에 감성을 불어넣는
-            세심하고 따뜻한 손길로 여러분의 일상을 바꿔드립니다.
+          <p className="text-base" style={{ color: '#6B5344' }}>
+            단순히 벽지를 바르는 것을 넘어, 머물고 싶은 공간을 만듭니다.
           </p>
         </div>
 
-        {/* Advantage Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {advantages.map((item, i) => (
+        {/* 카드 4개 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {features.map((item, i) => (
             <div
               key={i}
-              className={`p-6 rounded-2xl transition-all duration-700 group hover:scale-105`}
+              className="p-6 rounded-2xl transition-all duration-700"
               style={{
                 background: 'white',
-                border: '1px solid #E8DDD0',
-                boxShadow: '0 4px 20px rgba(61,43,31,0.04)',
+                border: '1px solid #F0E8E0',
+                boxShadow: '0 2px 16px rgba(61,43,31,0.05)',
                 transitionDelay: `${i * 80}ms`,
                 opacity: isVisible ? 1 : 0,
                 transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
               }}
             >
-              <div className="text-4xl mb-4">{item.icon}</div>
-              <h3 className="text-lg font-bold mb-2" style={{ color: '#3D2B1F' }}>
+              {/* 아이콘 박스 */}
+              <div
+                className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-5"
+                style={{ background: '#F5EFE6', color: '#8B7355' }}
+              >
+                {item.icon}
+              </div>
+
+              <h3 className="font-bold text-base mb-3 leading-snug" style={{ color: '#3D2B1F' }}>
                 {item.title}
               </h3>
               <p className="text-sm leading-relaxed" style={{ color: '#6B5344' }}>
@@ -97,21 +106,6 @@ export default function About() {
               </p>
             </div>
           ))}
-        </div>
-
-        {/* Trust Badge */}
-        <div
-          className={`mt-16 p-8 rounded-3xl text-center transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-          style={{
-            background: 'linear-gradient(135deg, #E8DDD0 0%, #F5EFE6 100%)',
-          }}
-        >
-          <p className="text-lg font-medium mb-2" style={{ color: '#3D2B1F' }}>
-            &ldquo;벽지 하나가 공간 전체를 바꿉니다&rdquo;
-          </p>
-          <p className="text-sm" style={{ color: '#6B5344' }}>
-            감성도배는 단순한 시공을 넘어, 당신만의 공간 스토리를 함께 만들어갑니다.
-          </p>
         </div>
       </div>
     </section>

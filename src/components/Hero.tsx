@@ -1,266 +1,303 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
+
+const rooms = [
+  {
+    src: '/beige.jpg',
+    alt: '아늑한 베이지 침실',
+    mood: '미니멀 베이지',
+    desc: '따뜻하고 포근한 분위기',
+  },
+  {
+    src: '/green.jpg',
+    alt: '포레스트 그린 침실',
+    mood: '포레스트 그린',
+    desc: '감각적이고 세련된 분위기',
+  },
+];
+
+const INTERVAL_MS = 5000;
 
 export default function Hero() {
-  const sceneRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isLoaded, setIsLoaded] = useState(false);
+  const [activeRoom, setActiveRoom] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  const switchRoom = useCallback((next: number) => {
+    setActiveRoom(next);
+    setProgress(0);
+  }, []);
 
   useEffect(() => {
     setIsLoaded(true);
+
     const handleMouseMove = (e: MouseEvent) => {
       const x = (e.clientX / window.innerWidth - 0.5) * 2;
       const y = (e.clientY / window.innerHeight - 0.5) * 2;
       setMousePos({ x, y });
     };
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+
+    // 진행률 업데이트
+    const progressInterval = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) return 0;
+        return p + 100 / (INTERVAL_MS / 50);
+      });
+    }, 50);
+
+    // 이미지 자동 전환
+    const slideInterval = setInterval(() => {
+      setActiveRoom(r => (r + 1) % rooms.length);
+      setProgress(0);
+    }, INTERVAL_MS);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearInterval(progressInterval);
+      clearInterval(slideInterval);
+    };
   }, []);
 
   return (
     <section
       id="hero"
       className="relative min-h-screen flex items-center overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #FAF7F2 0%, #F5EFE6 50%, #EDE3D8 100%)' }}
     >
-      {/* Animated background blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* ── 배경 이미지 레이어 ── */}
+      {rooms.map((room, i) => (
         <div
-          className="absolute w-96 h-96 rounded-full animate-blob"
+          key={i}
+          className="absolute inset-0"
           style={{
-            background: 'rgba(196,168,130,0.15)',
-            filter: 'blur(60px)',
-            top: '10%', left: '5%',
-            transform: `translate(${mousePos.x * -25}px, ${mousePos.y * -25}px)`,
-            transition: 'transform 0.8s ease-out',
+            opacity: activeRoom === i ? 1 : 0,
+            transition: 'opacity 1.4s ease-in-out',
+            zIndex: 1,
           }}
-        />
-        <div
-          className="absolute w-80 h-80 rounded-full animate-blob2"
-          style={{
-            background: 'rgba(232,221,208,0.4)',
-            filter: 'blur(50px)',
-            top: '50%', right: '5%',
-            transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30}px)`,
-            transition: 'transform 0.6s ease-out',
-          }}
-        />
-        <div
-          className="absolute w-64 h-64 rounded-full animate-blob3"
-          style={{
-            background: 'rgba(212,196,176,0.25)',
-            filter: 'blur(40px)',
-            bottom: '15%', left: '35%',
-            transform: `translate(${mousePos.x * 15}px, ${mousePos.y * -15}px)`,
-            transition: 'transform 0.7s ease-out',
-          }}
-        />
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 py-24 w-full flex flex-col lg:flex-row items-center gap-16 relative z-10">
-
-        {/* Left: Text */}
-        <div className="flex-1 text-center lg:text-left">
-          <div
-            className={`transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-          >
-            <span
-              className="inline-block text-sm font-medium px-4 py-1.5 rounded-full mb-6"
-              style={{ background: 'rgba(196,168,130,0.2)', color: '#6B5344' }}
-            >
-              ✨ 여성 전문 도배사
-            </span>
-
-            <h1 className="text-5xl md:text-6xl font-black leading-tight mb-4" style={{ color: '#3D2B1F' }}>
-              당신의 공간에<br />
-              <span style={{ color: '#C4A882' }}>감성</span>을 더하다
-            </h1>
-
-            <p className="text-base italic mb-6 font-light" style={{ color: '#8B7355' }}>
-              Designing Spaces, Crafting Emotions
-            </p>
-
-            <p className="text-base leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0" style={{ color: '#6B5344' }}>
-              섬세한 손끝에서 시작되는 공간의 변화.<br />
-              여성 도배사의 따뜻한 감각으로 벽지 한 장에도<br />
-              이야기를 담아드립니다.
-            </p>
-
-            {/* Stats */}
-            <div className="flex justify-center lg:justify-start gap-8 mb-8">
-              {[
-                { num: '500+', label: '시공 완료' },
-                { num: '98%', label: '고객 만족도' },
-                { num: '24h', label: '빠른 답변' },
-              ].map(stat => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-2xl font-black" style={{ color: '#3D2B1F' }}>{stat.num}</div>
-                  <div className="text-xs mt-0.5" style={{ color: '#8B7355' }}>{stat.label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-3.5 rounded-full font-semibold text-white transition-all hover:scale-105 active:scale-95"
-                style={{
-                  background: '#C4A882',
-                  boxShadow: '0 8px 25px rgba(196,168,130,0.4)',
-                }}
-              >
-                무료 상담 신청
-              </button>
-              <button
-                onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-3.5 rounded-full font-semibold transition-all hover:scale-105 active:scale-95"
-                style={{
-                  border: '2px solid #C4A882',
-                  color: '#6B5344',
-                  background: 'transparent',
-                }}
-              >
-                시공 사진 보기
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: 3D Scene */}
-        <div
-          className="flex-1 relative w-full"
-          style={{ height: '480px', perspective: '1200px' }}
         >
+          {/* 패럴랙스 컨테이너 */}
           <div
-            ref={sceneRef}
-            className="relative w-full h-full"
             style={{
-              transformStyle: 'preserve-3d',
-              transform: `rotateX(${mousePos.y * -6}deg) rotateY(${mousePos.x * 8}deg)`,
-              transition: 'transform 0.4s ease-out',
+              position: 'absolute',
+              inset: '-8%',
+              transform: `
+                scale(1.12)
+                translateX(${mousePos.x * -18}px)
+                translateY(${mousePos.y * -12}px)
+                rotateX(${mousePos.y * -1.5}deg)
+                rotateY(${mousePos.x * 1.5}deg)
+              `,
+              transition: 'transform 1s cubic-bezier(0.25, 1, 0.5, 1)',
+              perspective: '1200px',
             }}
           >
-            {/* Main backdrop card */}
-            <div
-              className="absolute rounded-3xl overflow-hidden shadow-2xl"
-              style={{
-                inset: '40px 60px',
-                background: 'linear-gradient(135deg, #E8DDD0 0%, #D4C4B0 100%)',
-                transform: 'translateZ(0px)',
-              }}
-            >
-              <div className="pattern-diagonal w-full h-full" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ color: '#6B5344' }}>
-                <div className="text-6xl mb-3">🏠</div>
-                <div className="text-lg font-bold">감성도배</div>
-                <div className="text-sm opacity-70 mt-1">나만의 공간을 완성하다</div>
-              </div>
-            </div>
+            <Image
+              src={room.src}
+              alt={room.alt}
+              fill
+              className="object-cover"
+              priority={i === 0}
+              sizes="100vw"
+            />
+          </div>
+        </div>
+      ))}
 
-            {/* Card 1 - top left */}
-            <div
-              className="absolute rounded-2xl overflow-hidden shadow-xl animate-float1"
-              style={{
-                top: '10px', left: '10px',
-                width: '130px', height: '160px',
-                background: 'linear-gradient(135deg, #F5EFE6 0%, #E8DDD0 100%)',
-              }}
-            >
-              <div className="pattern-stripe w-full h-full" />
-              <div className="absolute bottom-3 left-0 right-0 text-center text-xs font-medium" style={{ color: '#6B5344' }}>
-                스트라이프
-              </div>
-            </div>
+      {/* ── 다크 오버레이 (텍스트 가독성) ── */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(160deg, rgba(30,20,15,0.55) 0%, rgba(30,20,15,0.35) 40%, rgba(30,20,15,0.65) 100%)',
+          zIndex: 2,
+        }}
+      />
 
-            {/* Card 2 - top right */}
-            <div
-              className="absolute rounded-2xl overflow-hidden shadow-xl animate-float2"
-              style={{
-                top: '5px', right: '10px',
-                width: '120px', height: '140px',
-                background: 'linear-gradient(135deg, #EDE3D8 0%, #DDD0C0 100%)',
-              }}
-            >
-              <div className="pattern-dot w-full h-full" />
-              <div className="absolute bottom-3 left-0 right-0 text-center text-xs font-medium" style={{ color: '#6B5344' }}>
-                도트 패턴
-              </div>
-            </div>
+      {/* ── 텍스트 콘텐츠 (역방향 패럴랙스) ── */}
+      <div
+        className="relative w-full z-10"
+        style={{ zIndex: 3 }}
+      >
+        <div
+          className="max-w-5xl mx-auto px-6 py-32 text-center"
+          style={{
+            transform: `translateX(${mousePos.x * 6}px) translateY(${mousePos.y * 4}px)`,
+            transition: 'transform 1.2s cubic-bezier(0.25, 1, 0.5, 1)',
+          }}
+        >
+          {/* 배지 */}
+          <div
+            className={`inline-block text-sm font-medium px-5 py-2 rounded-full mb-8 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+            style={{
+              background: 'rgba(196,168,130,0.25)',
+              border: '1px solid rgba(196,168,130,0.5)',
+              color: '#F5EFE6',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            ✨ 여성 전문 도배사 · 감성도배
+          </div>
 
-            {/* Card 3 - bottom right */}
-            <div
-              className="absolute rounded-2xl overflow-hidden shadow-xl animate-float3"
-              style={{
-                bottom: '20px', right: '20px',
-                width: '140px', height: '120px',
-                background: 'linear-gradient(135deg, #F0E8DC 0%, #E0D4C4 100%)',
-              }}
-            >
-              <div className="pattern-floral w-full h-full" />
-              <div className="absolute bottom-3 left-0 right-0 text-center text-xs font-medium" style={{ color: '#6B5344' }}>
-                플로럴
-              </div>
-            </div>
+          {/* 메인 제목 */}
+          <h1
+            className={`font-black leading-tight mb-6 transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+            style={{
+              color: 'white',
+              fontSize: 'clamp(2.8rem, 6vw, 5rem)',
+              textShadow: '0 4px 30px rgba(0,0,0,0.3)',
+            }}
+          >
+            당신이 원하는 분위기,<br />
+            <span style={{ color: '#E8DDD0' }}>벽지 하나로 완성됩니다</span>
+          </h1>
 
-            {/* Card 4 - bottom left */}
-            <div
-              className="absolute rounded-2xl overflow-hidden shadow-xl animate-float4"
-              style={{
-                bottom: '15px', left: '15px',
-                width: '110px', height: '120px',
-                background: 'linear-gradient(135deg, #FAF7F2 0%, #EDE3D8 100%)',
-              }}
-            >
-              <div className="pattern-diamond w-full h-full" />
-              <div className="absolute bottom-3 left-0 right-0 text-center text-xs font-medium" style={{ color: '#6B5344' }}>
-                다이아몬드
-              </div>
-            </div>
+          {/* 슬로건 */}
+          <p
+            className={`text-lg italic mb-4 transition-all duration-700 delay-150 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+            style={{ color: 'rgba(232,221,208,0.85)' }}
+          >
+            Designing Spaces, Crafting Emotions
+          </p>
 
-            {/* Floating badge */}
-            <div
-              className="absolute animate-badge"
+          {/* 설명 */}
+          <p
+            className={`text-base leading-relaxed mb-10 transition-all duration-700 delay-200 max-w-xl mx-auto ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+            style={{ color: 'rgba(255,255,255,0.75)' }}
+          >
+            미니멀 베이지부터 포인트 그린까지.<br />
+            세심한 여성 도배사의 손길로 원하는 공간을 만들어드립니다.
+          </p>
+
+          {/* 통계 */}
+          <div
+            className={`flex justify-center gap-10 mb-10 transition-all duration-700 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+          >
+            {[
+              { num: '500+', label: '시공 완료' },
+              { num: '98%', label: '고객 만족도' },
+              { num: '24h', label: '빠른 답변' },
+            ].map(stat => (
+              <div key={stat.label} className="text-center">
+                <div className="text-3xl font-black" style={{ color: '#E8DDD0' }}>{stat.num}</div>
+                <div className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA 버튼 */}
+          <div
+            className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+          >
+            <button
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-10 py-4 rounded-full font-semibold text-white transition-all hover:scale-105 active:scale-95"
               style={{
-                top: '50%',
-                left: '50%',
-                transform: 'translateZ(140px) translateX(-50%) translateY(-50%)',
-                background: 'white',
-                padding: '8px 16px',
-                borderRadius: '100px',
-                boxShadow: '0 8px 30px rgba(61,43,31,0.15)',
-                whiteSpace: 'nowrap',
-                fontSize: '13px',
-                fontWeight: '600',
-                color: '#6B5344',
+                background: '#C4A882',
+                boxShadow: '0 8px 30px rgba(196,168,130,0.45)',
+                fontSize: '15px',
               }}
             >
-              ✨ 세심한 마감
-            </div>
+              무료 상담 신청
+            </button>
+            <button
+              onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-10 py-4 rounded-full font-semibold transition-all hover:scale-105 active:scale-95"
+              style={{
+                border: '2px solid rgba(232,221,208,0.7)',
+                color: '#F5EFE6',
+                background: 'rgba(255,255,255,0.08)',
+                backdropFilter: 'blur(8px)',
+                fontSize: '15px',
+              }}
+            >
+              시공 사진 보기
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* ── 하단: 진행 바 + 스크롤 ── */}
       <div
-        className="absolute bottom-8 left-1/2 flex flex-col items-center gap-2"
-        style={{
-          transform: 'translateX(-50%)',
-          color: '#8B7355',
-          animation: 'scrollBounce 2s ease-in-out infinite',
-        }}
+        className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-8 gap-5"
       >
-        <style>{`
-          @keyframes scrollBounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(8px); }
-          }
-        `}</style>
-        <span className="text-xs">스크롤</span>
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        {/* 분위기 뱃지 - 심플하게 */}
+        <div className="flex items-center gap-2">
+          {[...rooms].reverse().map((room, ri) => {
+            const i = rooms.length - 1 - ri;
+            return (
+              <button
+                key={i}
+                onClick={() => switchRoom(i)}
+                className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-500"
+                style={{
+                  background: activeRoom === i ? 'rgba(232,221,208,0.2)' : 'transparent',
+                  border: `1px solid ${activeRoom === i ? 'rgba(232,221,208,0.5)' : 'rgba(255,255,255,0.15)'}`,
+                }}
+              >
+                <div
+                  className="w-2 h-2 rounded-full transition-all duration-300"
+                  style={{ background: activeRoom === i ? '#E8DDD0' : 'rgba(255,255,255,0.35)' }}
+                />
+                <span
+                  className="text-xs font-medium"
+                  style={{ color: activeRoom === i ? '#E8DDD0' : 'rgba(255,255,255,0.45)' }}
+                >
+                  {room.mood}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 진행 바 */}
+        <div className="flex items-center gap-2">
+          {rooms.map((_, i) => (
+            <div
+              key={i}
+              className="relative overflow-hidden rounded-full"
+              style={{
+                width: activeRoom === i ? '40px' : '6px',
+                height: '4px',
+                background: 'rgba(255,255,255,0.25)',
+                transition: 'width 0.4s ease',
+              }}
+            >
+              {activeRoom === i && (
+                <div
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: '#E8DDD0',
+                    transformOrigin: 'left',
+                    transform: `scaleX(${progress / 100})`,
+                    transition: 'transform 0.05s linear',
+                  }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* 스크롤 인디케이터 */}
+        <div
+          className="flex flex-col items-center gap-1.5"
+          style={{
+            color: 'rgba(255,255,255,0.5)',
+            animation: 'scrollBounce 2s ease-in-out infinite',
+          }}
+        >
+          <style>{`
+            @keyframes scrollBounce {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(6px); }
+            }
+          `}</style>
+          <span className="text-xs">스크롤</span>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </div>
     </section>
   );
