@@ -8,42 +8,30 @@ const services = [
     title: '아파트 도배',
     desc: '전체 리모델링부터 부분 교체까지. 아파트 구조에 최적화된 시공으로 깔끔한 결과물을 약속합니다.',
     tags: ['전체 시공', '부분 교체', '입주 청소'],
-    popular: true,
   },
   {
     icon: '🏠',
     title: '주택 도배',
     desc: '단독주택의 개성을 살린 맞춤형 도배. 공간 특성에 따른 최적의 벽지를 추천해드립니다.',
     tags: ['단독주택', '다가구', '빌라'],
-    popular: false,
   },
   {
     icon: '🎯',
     title: '포인트 벽지',
     desc: '한 면만으로도 공간의 분위기를 완전히 바꿔드립니다. 감각적인 포인트 시공 전문입니다.',
     tags: ['1면 시공', '인테리어 강조', '패턴/컬러'],
-    popular: false,
-  },
-  {
-    icon: '🔲',
-    title: '인테리어 필름',
-    desc: '가구, 문, 바닥 등 다양한 곳에 시공 가능한 필름 작업으로 새것처럼 변신시켜 드립니다.',
-    tags: ['가구 필름', '문틀', '바닥'],
-    popular: false,
   },
   {
     icon: '⬜',
     title: '천장 시공',
     desc: '천장 벽지도 섬세하게. 말끔하고 평탄한 천장 마감으로 공간의 완성도를 높입니다.',
     tags: ['평면 천장', '몰딩 시공', '도색'],
-    popular: false,
   },
   {
     icon: '🔧',
     title: '부분 보수',
     desc: '찢어지거나 들뜬 부분도 꼼꼼하게 보수합니다. 작은 하자도 정성껏 처리해드립니다.',
     tags: ['하자 보수', '긴급 출동', '소량 시공'],
-    popular: false,
   },
 ];
 
@@ -90,24 +78,14 @@ export default function Services() {
               className="relative p-6 rounded-2xl transition-all duration-700 hover:scale-105 cursor-pointer"
               style={{
                 background: 'white',
-                border: svc.popular ? '2px solid #C4A882' : '1px solid #E8DDD0',
-                boxShadow: svc.popular
-                  ? '0 8px 30px rgba(196,168,130,0.2)'
-                  : '0 4px 20px rgba(61,43,31,0.04)',
+                border: '1px solid #E8DDD0',
+                boxShadow: '0 4px 20px rgba(61,43,31,0.04)',
                 transitionDelay: `${i * 80}ms`,
                 opacity: isVisible ? 1 : 0,
                 transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
               }}
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              {svc.popular && (
-                <div
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold text-white"
-                  style={{ background: '#C4A882' }}
-                >
-                  인기 서비스
-                </div>
-              )}
 
               <div className="text-4xl mb-4">{svc.icon}</div>
               <h3 className="text-lg font-bold mb-2" style={{ color: '#3D2B1F' }}>{svc.title}</h3>
