@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 const rooms = [
@@ -26,10 +26,6 @@ export default function Hero() {
   const [activeRoom, setActiveRoom] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  const switchRoom = useCallback((next: number) => {
-    setActiveRoom(next);
-    setProgress(0);
-  }, []);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -82,13 +78,13 @@ export default function Hero() {
           <div
             style={{
               position: 'absolute',
-              inset: '-8%',
+              inset: '-5%',
               transform: `
-                scale(1.12)
-                translateX(${mousePos.x * -18}px)
-                translateY(${mousePos.y * -12}px)
-                rotateX(${mousePos.y * -1.5}deg)
-                rotateY(${mousePos.x * 1.5}deg)
+                scale(1.06)
+                translateX(${mousePos.x * -10}px)
+                translateY(${mousePos.y * -7}px)
+                rotateX(${mousePos.y * -0.8}deg)
+                rotateY(${mousePos.x * 0.8}deg)
               `,
               transition: 'transform 1s cubic-bezier(0.25, 1, 0.5, 1)',
               perspective: '1200px',
@@ -101,6 +97,7 @@ export default function Hero() {
               className="object-cover"
               priority={i === 0}
               sizes="100vw"
+              quality={100}
             />
           </div>
         </div>
@@ -110,7 +107,7 @@ export default function Hero() {
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(160deg, rgba(30,20,15,0.55) 0%, rgba(30,20,15,0.35) 40%, rgba(30,20,15,0.65) 100%)',
+          background: 'linear-gradient(160deg, rgba(30,20,15,0.45) 0%, rgba(30,20,15,0.25) 40%, rgba(30,20,15,0.55) 100%)',
           zIndex: 2,
         }}
       />
@@ -166,8 +163,9 @@ export default function Hero() {
             className={`text-base leading-relaxed mb-10 transition-all duration-700 delay-200 max-w-xl mx-auto ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
             style={{ color: 'rgba(255,255,255,0.75)' }}
           >
-            미니멀 베이지부터 포인트 그린까지.<br />
-            세심한 여성 도배사의 손길로 원하는 공간을 만들어드립니다.
+            벽지 한 장이 바꾸는 공간의 온도.<br />
+            당신의 일상에 완벽히 어울리는 새로운 무드를<br />
+            감성도배가 만들어 드립니다.
           </p>
 
           {/* 통계 */}
@@ -176,7 +174,7 @@ export default function Hero() {
           >
             {[
               { num: '500+', label: '시공 완료' },
-              { num: '98%', label: '고객 만족도' },
+              { num: '★4.9', label: '고객 만족도' },
               { num: '24h', label: '빠른 답변' },
             ].map(stat => (
               <div key={stat.label} className="text-center">
@@ -222,35 +220,6 @@ export default function Hero() {
       <div
         className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center pb-8 gap-5"
       >
-        {/* 분위기 뱃지 - 심플하게 */}
-        <div className="flex items-center gap-2">
-          {[...rooms].reverse().map((room, ri) => {
-            const i = rooms.length - 1 - ri;
-            return (
-              <button
-                key={i}
-                onClick={() => switchRoom(i)}
-                className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-500"
-                style={{
-                  background: activeRoom === i ? 'rgba(232,221,208,0.2)' : 'transparent',
-                  border: `1px solid ${activeRoom === i ? 'rgba(232,221,208,0.5)' : 'rgba(255,255,255,0.15)'}`,
-                }}
-              >
-                <div
-                  className="w-2 h-2 rounded-full transition-all duration-300"
-                  style={{ background: activeRoom === i ? '#E8DDD0' : 'rgba(255,255,255,0.35)' }}
-                />
-                <span
-                  className="text-xs font-medium"
-                  style={{ color: activeRoom === i ? '#E8DDD0' : 'rgba(255,255,255,0.45)' }}
-                >
-                  {room.mood}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
         {/* 진행 바 */}
         <div className="flex items-center gap-2">
           {rooms.map((_, i) => (
