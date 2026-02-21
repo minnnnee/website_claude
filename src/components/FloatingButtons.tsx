@@ -28,7 +28,7 @@ const buttons = [
     icon: (
       // 네이버 N 로고
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M16 3h-2.5L12 7.5 10.5 3H8v18h2.5v-9l1.5 4 1.5-4v9H16V3z"/>
+        <path d="M4 3h3.5L15 17.5V3h3.5v18H15L7.5 6.5V21H4z"/>
       </svg>
     ),
   },
