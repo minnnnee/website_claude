@@ -91,7 +91,7 @@ export default function Gallery() {
             시공 갤러리
           </span>
           <h2 className="text-4xl font-black mb-4" style={{ color: '#3D2B1F', wordBreak: 'keep-all' }}>
-            직접 확인하는<br className="block md:hidden" /><span style={{ color: '#C4A882' }}>시공 퀄리티</span>
+            직접 확인하는 <span className="block md:inline" style={{ color: '#C4A882' }}>시공 퀄리티</span>
           </h2>
           <p className="text-base max-w-xl mx-auto" style={{ color: '#6B5344' }}>
             감성도배가 완성한 아름다운 공간들을 확인해보세요.
