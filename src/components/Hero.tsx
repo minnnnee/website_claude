@@ -14,8 +14,11 @@ type HeroImage = {
 };
 
 const fallbackRooms: HeroImage[] = [
-  { id: 0, image_url: '/beige.jpg', alt: '아늑한 베이지 침실', mood: '미니멀 베이지', description: '따뜻하고 포근한 분위기', sort_order: 1 },
-  { id: 1, image_url: '/green.jpg', alt: '포레스트 그린 침실', mood: '포레스트 그린', description: '감각적이고 세련된 분위기', sort_order: 2 },
+  { id: 0, image_url: '/greenorange.jpg', alt: '그린 오렌지 감성 공간', mood: '그린 오렌지', description: '생동감 넘치는 자연의 분위기', sort_order: 1 },
+  { id: 1, image_url: '/deepgray.jpg', alt: '딥 그레이 모던 공간', mood: '딥 그레이', description: '세련되고 도시적인 분위기', sort_order: 2 },
+  { id: 2, image_url: '/brown.jpg', alt: '브라운 웜톤 공간', mood: '웜 브라운', description: '따뜻하고 고급스러운 분위기', sort_order: 3 },
+  { id: 3, image_url: '/pink.jpg', alt: '핑크 로맨틱 공간', mood: '소프트 핑크', description: '사랑스럽고 감성적인 분위기', sort_order: 4 },
+  { id: 4, image_url: '/begienew.jpg', alt: '뉴 베이지 감성 공간', mood: '뉴 베이지', description: '포근하고 편안한 분위기', sort_order: 5 },
 ];
 
 const INTERVAL_MS = 5000;
