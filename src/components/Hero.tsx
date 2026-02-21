@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { supabase } from '@/lib/supabase';
 
-const rooms = [
-  {
-    src: '/beige.jpg',
-    alt: '아늑한 베이지 침실',
-    mood: '미니멀 베이지',
-    desc: '따뜻하고 포근한 분위기',
-  },
-  {
-    src: '/green.jpg',
-    alt: '포레스트 그린 침실',
-    mood: '포레스트 그린',
-    desc: '감각적이고 세련된 분위기',
-  },
+type HeroImage = {
+  id: number;
+  image_url: string;
+  alt: string;
+  mood: string;
+  description: string;
+  sort_order: number;
+};
+
+const fallbackRooms: HeroImage[] = [
+  { id: 0, image_url: '/beige.jpg', alt: '아늑한 베이지 침실', mood: '미니멀 베이지', description: '따뜻하고 포근한 분위기', sort_order: 1 },
+  { id: 1, image_url: '/green.jpg', alt: '포레스트 그린 침실', mood: '포레스트 그린', description: '감각적이고 세련된 분위기', sort_order: 2 },
 ];
 
 const INTERVAL_MS = 5000;
@@ -25,7 +25,18 @@ export default function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeRoom, setActiveRoom] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [rooms, setRooms] = useState<HeroImage[]>(fallbackRooms);
 
+  useEffect(() => {
+    supabase
+      .from('hero_images')
+      .select('*')
+      .eq('active', true)
+      .order('sort_order', { ascending: true })
+      .then(({ data }) => {
+        if (data && data.length > 0) setRooms(data);
+      });
+  }, []);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -37,7 +48,6 @@ export default function Hero() {
     };
     window.addEventListener('mousemove', handleMouseMove);
 
-    // 진행률 업데이트
     const progressInterval = setInterval(() => {
       setProgress(p => {
         if (p >= 100) return 0;
@@ -45,7 +55,6 @@ export default function Hero() {
       });
     }, 50);
 
-    // 이미지 자동 전환
     const slideInterval = setInterval(() => {
       setActiveRoom(r => (r + 1) % rooms.length);
       setProgress(0);
@@ -56,7 +65,7 @@ export default function Hero() {
       clearInterval(progressInterval);
       clearInterval(slideInterval);
     };
-  }, []);
+  }, [rooms.length]);
 
   return (
     <section
@@ -66,7 +75,7 @@ export default function Hero() {
       {/* ── 배경 이미지 레이어 ── */}
       {rooms.map((room, i) => (
         <div
-          key={i}
+          key={room.id}
           className="absolute inset-0"
           style={{
             opacity: activeRoom === i ? 1 : 0,
@@ -74,7 +83,6 @@ export default function Hero() {
             zIndex: 1,
           }}
         >
-          {/* 패럴랙스 컨테이너 */}
           <div
             style={{
               position: 'absolute',
@@ -91,7 +99,7 @@ export default function Hero() {
             }}
           >
             <Image
-              src={room.src}
+              src={room.image_url}
               alt={room.alt}
               fill
               className="object-cover"

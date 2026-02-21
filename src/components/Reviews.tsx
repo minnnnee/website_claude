@@ -1,51 +1,31 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
-const reviews = [
-  {
-    name: '김○○ 고객님',
-    location: '남양주 화도읍',
-    rating: 5,
-    text: '이사하면서 전체 도배를 맡겼는데 정말 만족스러워요. 색상 추천도 너무 잘 해주셔서 집이 훨씬 넓어 보이고 분위기가 확 바뀌었어요. 꼼꼼하게 마무리해 주셔서 군더더기 하나 없어요!',
-    date: '2024.12',
-    highlight: '색상 추천이 탁월해요',
-  },
-  {
-    name: '박○○ 고객님',
-    location: '서울 노원구',
-    rating: 5,
-    text: '여자 분이라 처음엔 걱정했는데 완전 기우였어요. 오히려 더 꼼꼼하고 섬세하게 해주셔서 놀랐습니다. 침실 포인트 벽지 시공이 정말 예쁘게 됐어요. 주변에 다 추천하고 있어요.',
-    date: '2025.01',
-    highlight: '꼼꼼하고 섬세한 시공',
-  },
-  {
-    name: '이○○ 고객님',
-    location: '남양주 가평',
-    rating: 5,
-    text: '상담부터 시공 완료까지 전 과정이 너무 편했어요. 제 취향을 잘 파악하셔서 제안해주신 벽지가 딱 마음에 들었고, 깔끔하게 마무리해 주셨어요. 이사할 때마다 꼭 다시 부를게요!',
-    date: '2025.02',
-    highlight: '취향 파악이 정확해요',
-  },
-  {
-    name: '최○○ 고객님',
-    location: '남양주 별내',
-    rating: 5,
-    text: '주방 포인트 벽지를 바꿨는데 집 전체 분위기가 달라졌어요! 어떤 패턴이 잘 어울릴지 사진도 보여주시면서 친절하게 설명해 주셔서 너무 좋았습니다. 결과물도 기대 이상이에요.',
-    date: '2025.02',
-    highlight: '친절한 설명이 좋았어요',
-  },
-  {
-    name: '정○○ 고객님',
-    location: '남양주 다산동',
-    rating: 5,
-    text: '아이방 전체 도배를 맡겼어요. 아이가 좋아하는 분위기로 직접 제안해 주셔서 감동이었어요. 시공 중에도 물건을 조심스럽게 다뤄주시고 마무리도 정말 깔끔했습니다.',
-    date: '2025.03',
-    highlight: '배려 있는 시공',
-  },
-];
+type Review = {
+  id: number;
+  name: string;
+  location: string;
+  rating: number;
+  text: string;
+  date: string;
+  highlight: string;
+  sort_order: number;
+};
 
 export default function Reviews() {
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from('reviews')
+      .select('*')
+      .order('sort_order', { ascending: true })
+      .then(({ data }) => {
+        if (data) setReviews(data);
+      });
+  }, []);
   const [isVisible, setIsVisible] = useState(false);
   const [current, setCurrent] = useState(0);
   const [isDragging, setIsDragging] = useState(false);

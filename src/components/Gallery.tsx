@@ -2,61 +2,26 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { supabase } from '@/lib/supabase';
 
 const tabs = ['전체', '아파트', '빌라', '오피스텔', '단독주택', '상업공간'];
-
-const galleryItems = [
-  { id: 1,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt1.jpeg' },
-  { id: 2,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt2.jpeg' },
-  { id: 3,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt3.jpeg' },
-  { id: 4,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt4.jpeg' },
-  { id: 5,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt5.jpeg' },
-  { id: 6,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt6.jpeg' },
-  { id: 7,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt7.jpeg' },
-  { id: 8,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt8.jpeg' },
-  { id: 9,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt9.jpeg' },
-  { id: 10, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt10.jpeg' },
-  { id: 11, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt11.jpeg' },
-  { id: 12, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt12.jpeg' },
-  { id: 13, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt13.jpeg' },
-  { id: 14, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa1.jpeg' },
-  { id: 15, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa2.jpeg' },
-  { id: 16, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa3.jpeg' },
-  { id: 17, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa4.jpeg' },
-  { id: 18, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa5.jpeg' },
-  { id: 19, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa6.jpeg' },
-  { id: 20, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa7.jpeg' },
-  { id: 21, category: '단독주택', label: '단독주택 시공', sub: '감성도배', src: '/detached1.jpeg' },
-  { id: 35, category: '단독주택', label: '단독주택 시공', sub: '감성도배', src: '/detached2.jpeg' },
-  { id: 36, category: '단독주택', label: '단독주택 시공', sub: '감성도배', src: '/detached3.jpeg' },
-  { id: 37, category: '단독주택', label: '단독주택 시공', sub: '감성도배', src: '/detached4.jpeg' },
-  { id: 38, category: '단독주택', label: '단독주택 시공', sub: '감성도배', src: '/detached5.jpeg' },
-  { id: 39, category: '단독주택', label: '단독주택 시공', sub: '감성도배', src: '/detached6.jpeg' },
-  { id: 40, category: '단독주택', label: '단독주택 시공', sub: '감성도배', src: '/detached7.jpeg' },
-  { id: 41, category: '단독주택', label: '단독주택 시공', sub: '감성도배', src: '/detached8.jpeg' },
-  { id: 42, category: '단독주택', label: '단독주택 시공', sub: '감성도배', src: '/detached9.jpeg' },
-  { id: 22, category: '오피스텔', label: '오피스텔 시공', sub: '준비 중', src: null },
-  { id: 23, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial1.jpeg' },
-  { id: 24, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial2.jpeg' },
-  { id: 25, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial3.jpeg' },
-  { id: 26, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial4.jpeg' },
-  { id: 27, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial5.jpeg' },
-  { id: 28, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial6.jpeg' },
-  { id: 29, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial7.jpeg' },
-  { id: 30, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial8.jpeg' },
-  { id: 31, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial9.jpeg' },
-  { id: 32, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial10.jpeg' },
-  { id: 33, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial11.jpeg' },
-  { id: 34, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial12.jpeg' },
-];
-
 const PAGE_SIZE = 9;
+
+type GalleryItem = {
+  id: number;
+  category: string;
+  label: string;
+  sub: string;
+  image_url: string | null;
+  sort_order: number;
+};
 
 export default function Gallery() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('전체');
   const [hovered, setHovered] = useState<number | null>(null);
   const [showCount, setShowCount] = useState(PAGE_SIZE);
+  const [items, setItems] = useState<GalleryItem[]>([]);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -68,20 +33,30 @@ export default function Gallery() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    supabase
+      .from('gallery_items')
+      .select('*')
+      .order('sort_order', { ascending: true })
+      .then(({ data }) => {
+        if (data) setItems(data);
+      });
+  }, []);
+
   const filtered = (() => {
     if (activeTab !== '전체') {
-      return galleryItems.filter(item => item.category === activeTab && item.src);
+      return items.filter(item => item.category === activeTab && item.image_url);
     }
-    // 전체 탭: 카테고리별로 번갈아 배치 (아파트→빌라→단독주택→상업공간→아파트→...)
-    const groups: Record<string, typeof galleryItems> = {};
-    galleryItems.filter(i => i.src).forEach(item => {
+    // 전체 탭: 카테고리별로 번갈아 배치
+    const groups: Record<string, GalleryItem[]> = {};
+    items.filter(i => i.image_url).forEach(item => {
       if (!groups[item.category]) groups[item.category] = [];
       groups[item.category].push(item);
     });
     const order = ['아파트', '빌라', '단독주택', '상업공간'];
     const cats = order.map(c => groups[c] ?? []);
-    const result: typeof galleryItems = [];
-    const maxLen = Math.max(...cats.map(g => g.length));
+    const result: GalleryItem[] = [];
+    const maxLen = Math.max(0, ...cats.map(g => g.length));
     for (let i = 0; i < maxLen; i++) {
       for (const group of cats) {
         if (group[i]) result.push(group[i]);
@@ -142,11 +117,11 @@ export default function Gallery() {
               {tab}
               {activeTab === tab && tab !== '전체' && (
                 <span className="ml-1.5 text-xs opacity-80">
-                  {galleryItems.filter(i => i.category === tab && i.src).length}
+                  {items.filter(i => i.category === tab && i.image_url).length}
                 </span>
               )}
               {tab === '전체' && activeTab === tab && (
-                <span className="ml-1.5 text-xs opacity-80">{galleryItems.filter(i => i.src).length}</span>
+                <span className="ml-1.5 text-xs opacity-80">{items.filter(i => i.image_url).length}</span>
               )}
             </button>
           ))}
@@ -164,12 +139,10 @@ export default function Gallery() {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {visible.map((item, idx) => (
-                /* 바깥 wrapper: fadeInUp 애니메이션만 담당 */
                 <div
                   key={`${activeTab}-${item.id}`}
                   style={{ animation: `fadeInUp 0.5s ease-out ${idx * 60}ms both` }}
                 >
-                  {/* 안쪽 카드: hover scale 담당 (animation과 분리) */}
                   <div
                     className="relative rounded-2xl overflow-hidden cursor-pointer"
                     style={{
@@ -185,10 +158,9 @@ export default function Gallery() {
                     onMouseEnter={() => setHovered(item.id)}
                     onMouseLeave={() => setHovered(null)}
                   >
-                  {/* 배경: 실제 이미지 or 플레이스홀더 */}
-                  {item.src ? (
+                  {item.image_url ? (
                     <Image
-                      src={item.src}
+                      src={item.image_url}
                       alt={item.label}
                       fill
                       className="object-cover"
@@ -203,7 +175,6 @@ export default function Gallery() {
                     </div>
                   )}
 
-                  {/* 카테고리 뱃지 */}
                   <div
                     className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full"
                     style={{ background: 'rgba(255,255,255,0.85)', color: '#6B5344' }}
@@ -211,7 +182,6 @@ export default function Gallery() {
                     {item.category}
                   </div>
 
-                  {/* 오버레이 */}
                   <div
                     className="absolute inset-0 flex flex-col justify-end p-4 transition-all duration-300"
                     style={{
