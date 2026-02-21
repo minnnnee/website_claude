@@ -10,6 +10,11 @@ export const metadata: Metadata = {
     description: "세심한 여성 도배사의 손길로 당신의 공간을 아름답게 변화시켜드립니다.",
     type: "website",
   },
+  verification: {
+    other: {
+      'naver-site-verification': 'a3099df3b6c0fad2cbc2079317de4f3d217c692d',
+    },
+  },
 };
 
 export default function RootLayout({
