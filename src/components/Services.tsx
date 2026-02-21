@@ -63,7 +63,7 @@ export default function Services() {
           >
             서비스 안내
           </span>
-          <h2 className="text-4xl font-black mb-4" style={{ color: '#3D2B1F' }}>
+          <h2 className="text-4xl font-black mb-4" style={{ color: '#3D2B1F', wordBreak: 'keep-all' }}>
             어떤 공간이든 <span style={{ color: '#C4A882' }}>완벽하게</span>
           </h2>
           <p className="text-base max-w-xl mx-auto" style={{ color: '#6B5344' }}>

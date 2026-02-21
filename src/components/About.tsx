@@ -67,11 +67,12 @@ export default function About() {
         <div
           className={`text-center mb-14 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
-          <h2 className="text-4xl font-black mb-4" style={{ color: '#3D2B1F' }}>
+          <h2 className="text-4xl font-black mb-4" style={{ color: '#3D2B1F', wordBreak: 'keep-all' }}>
             왜 <span style={{ color: '#C4A882' }}>감성도배</span>일까요?
           </h2>
-          <p className="text-base" style={{ color: '#6B5344' }}>
-            단순히 벽지를 바르는 것을 넘어, 머물고 싶은 공간을 만듭니다.
+          <p className="text-base" style={{ color: '#6B5344', wordBreak: 'keep-all' }}>
+            단순히 벽지를 바르는 것을 넘어,<br />
+            머물고 싶은 공간을 만듭니다.
           </p>
         </div>
 
