@@ -1,19 +1,28 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 const tabs = ['전체', '아파트', '빌라', '오피스텔', '단독주택', '상업공간'];
 
 const galleryItems = [
-  { id: 1, category: '아파트', label: '거실 전체 도배', sub: '아이보리 베이지', pattern: 'pattern-stripe', bg: 'linear-gradient(135deg, #FAF7F2 0%, #E8DDD0 100%)', size: 'large' },
-  { id: 2, category: '아파트', label: '침실 포인트', sub: '그레이 미니멀', pattern: 'pattern-dot', bg: 'linear-gradient(135deg, #EDE3D8 0%, #D4C4B0 100%)', size: 'small' },
-  { id: 3, category: '빌라', label: '주방 포인트벽', sub: '플로럴 패턴', pattern: 'pattern-floral', bg: 'linear-gradient(135deg, #F5EFE6 0%, #E0D4C4 100%)', size: 'small' },
-  { id: 4, category: '단독주택', label: '아이방 전체', sub: '다이아몬드', pattern: 'pattern-diamond', bg: 'linear-gradient(135deg, #EDE3D8 0%, #DDD0C0 100%)', size: 'large' },
-  { id: 5, category: '오피스텔', label: '서재 포인트', sub: '크로스 라인', pattern: 'pattern-cross', bg: 'linear-gradient(135deg, #F0E8DC 0%, #E8DDD0 100%)', size: 'small' },
-  { id: 6, category: '상업공간', label: '카페 인테리어', sub: '내추럴 텍스처', pattern: 'pattern-diagonal', bg: 'linear-gradient(135deg, #E8DDD0 0%, #C4A882 50%, #E8DDD0 100%)', size: 'small' },
-  { id: 7, category: '아파트', label: '현관/복도', sub: '스트라이프', pattern: 'pattern-stripe', bg: 'linear-gradient(135deg, #F5EFE6 0%, #EDE3D8 100%)', size: 'small' },
-  { id: 8, category: '빌라', label: '거실 전체', sub: '플로럴 베이지', pattern: 'pattern-floral', bg: 'linear-gradient(135deg, #FAF7F2 0%, #E8DDD0 100%)', size: 'large' },
-  { id: 9, category: '단독주택', label: '안방 시공', sub: '도트 패턴', pattern: 'pattern-dot', bg: 'linear-gradient(135deg, #EDE3D8 0%, #D4C4B0 100%)', size: 'small' },
+  { id: 1,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt1.jpeg' },
+  { id: 2,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt2.jpeg' },
+  { id: 3,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt3.jpeg' },
+  { id: 4,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt4.jpeg' },
+  { id: 5,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt5.jpeg' },
+  { id: 6,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt6.jpeg' },
+  { id: 7,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt7.jpeg' },
+  { id: 8,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt8.jpeg' },
+  { id: 9,  category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt9.jpeg' },
+  { id: 10, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt10.jpeg' },
+  { id: 11, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt11.jpeg' },
+  { id: 12, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt12.jpeg' },
+  { id: 13, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt13.jpeg' },
+  { id: 14, category: '빌라',   label: '빌라 시공', sub: '준비 중', src: null },
+  { id: 15, category: '단독주택', label: '단독주택 시공', sub: '준비 중', src: null },
+  { id: 16, category: '오피스텔', label: '오피스텔 시공', sub: '준비 중', src: null },
+  { id: 17, category: '상업공간', label: '상업공간 시공', sub: '준비 중', src: null },
 ];
 
 export default function Gallery() {
@@ -32,8 +41,8 @@ export default function Gallery() {
   }, []);
 
   const filtered = activeTab === '전체'
-    ? galleryItems
-    : galleryItems.filter(item => item.category === activeTab);
+    ? galleryItems.filter(item => item.src)
+    : galleryItems.filter(item => item.category === activeTab && item.src);
 
   return (
     <section
@@ -79,11 +88,11 @@ export default function Gallery() {
               {tab}
               {activeTab === tab && tab !== '전체' && (
                 <span className="ml-1.5 text-xs opacity-80">
-                  {galleryItems.filter(i => i.category === tab).length}
+                  {galleryItems.filter(i => i.category === tab && i.src).length}
                 </span>
               )}
               {tab === '전체' && activeTab === tab && (
-                <span className="ml-1.5 text-xs opacity-80">{galleryItems.length}</span>
+                <span className="ml-1.5 text-xs opacity-80">{galleryItems.filter(i => i.src).length}</span>
               )}
             </button>
           ))}
@@ -122,11 +131,23 @@ export default function Gallery() {
                     onMouseEnter={() => setHovered(item.id)}
                     onMouseLeave={() => setHovered(null)}
                   >
-                  {/* 패턴 배경 */}
-                  <div
-                    className={`absolute inset-0 ${item.pattern}`}
-                    style={{ background: item.bg }}
-                  />
+                  {/* 배경: 실제 이미지 or 플레이스홀더 */}
+                  {item.src ? (
+                    <Image
+                      src={item.src}
+                      alt={item.label}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0 flex items-center justify-center"
+                      style={{ background: 'linear-gradient(135deg, #FAF7F2 0%, #E8DDD0 100%)' }}
+                    >
+                      <span style={{ color: '#C4A882', fontSize: '2rem' }}>🏠</span>
+                    </div>
+                  )}
 
                   {/* 카테고리 뱃지 */}
                   <div
