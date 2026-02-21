@@ -28,7 +28,18 @@ const galleryItems = [
   { id: 20, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa7.jpeg' },
   { id: 21, category: '단독주택', label: '단독주택 시공', sub: '준비 중', src: null },
   { id: 22, category: '오피스텔', label: '오피스텔 시공', sub: '준비 중', src: null },
-  { id: 23, category: '상업공간', label: '상업공간 시공', sub: '준비 중', src: null },
+  { id: 23, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial1.jpeg' },
+  { id: 24, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial2.jpeg' },
+  { id: 25, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial3.jpeg' },
+  { id: 26, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial4.jpeg' },
+  { id: 27, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial5.jpeg' },
+  { id: 28, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial6.jpeg' },
+  { id: 29, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial7.jpeg' },
+  { id: 30, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial8.jpeg' },
+  { id: 31, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial9.jpeg' },
+  { id: 32, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial10.jpeg' },
+  { id: 33, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial11.jpeg' },
+  { id: 34, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial12.jpeg' },
 ];
 
 export default function Gallery() {
