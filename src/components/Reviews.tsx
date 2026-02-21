@@ -93,7 +93,7 @@ export default function Reviews() {
             고객 후기
           </span>
           <h2 className="text-4xl font-black mb-4" style={{ color: '#3D2B1F', wordBreak: 'keep-all' }}>
-            고객님들의 <span style={{ color: '#C4A882' }}>진심 어린 후기</span>
+            고객님들의<br className="block md:hidden" /><span style={{ color: '#C4A882' }}>진심 어린 후기</span>
           </h2>
           <p className="text-base" style={{ color: '#6B5344' }}>
             감성도배와 함께한 고객분들의 생생한 이야기입니다.
