@@ -153,8 +153,10 @@ export default function Hero() {
             className={`font-black leading-tight mb-6 transition-all duration-700 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
             style={{
               color: 'white',
-              fontSize: 'clamp(2.8rem, 6vw, 5rem)',
+              fontSize: 'clamp(2rem, 6vw, 5rem)',
               textShadow: '0 4px 30px rgba(0,0,0,0.3)',
+              wordBreak: 'keep-all',
+              overflowWrap: 'break-word',
             }}
           >
             당신이 원하는 분위기,<br />
