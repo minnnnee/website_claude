@@ -159,8 +159,8 @@ export default function Hero() {
               overflowWrap: 'break-word',
             }}
           >
-            당신이 원하는 분위기,<br />
-            <span style={{ color: '#E8DDD0' }}>벽지 하나로 완성됩니다</span>
+            당신이 꿈꾸던 분위기,<br />
+            <span style={{ color: '#E8DDD0' }}>도배 그 이상의 감성으로</span>
           </h1>
 
           {/* 슬로건 */}
