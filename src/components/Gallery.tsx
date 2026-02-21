@@ -300,6 +300,15 @@ export default function Gallery() {
             >
               📸 인스타그램 보기
             </a>
+            <a
+              href="https://www.tiktok.com/@dobae_dobae"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm transition-all hover:scale-105"
+              style={{ background: '#010101', color: 'white' }}
+            >
+              🎵 틱톡 보기
+            </a>
           </div>
         </div>
       </div>
