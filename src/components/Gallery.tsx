@@ -19,10 +19,16 @@ const galleryItems = [
   { id: 11, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt11.jpeg' },
   { id: 12, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt12.jpeg' },
   { id: 13, category: '아파트', label: '아파트 시공', sub: '감성도배', src: '/apt13.jpeg' },
-  { id: 14, category: '빌라',   label: '빌라 시공', sub: '준비 중', src: null },
-  { id: 15, category: '단독주택', label: '단독주택 시공', sub: '준비 중', src: null },
-  { id: 16, category: '오피스텔', label: '오피스텔 시공', sub: '준비 중', src: null },
-  { id: 17, category: '상업공간', label: '상업공간 시공', sub: '준비 중', src: null },
+  { id: 14, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa1.jpeg' },
+  { id: 15, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa2.jpeg' },
+  { id: 16, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa3.jpeg' },
+  { id: 17, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa4.jpeg' },
+  { id: 18, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa5.jpeg' },
+  { id: 19, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa6.jpeg' },
+  { id: 20, category: '빌라', label: '빌라 시공', sub: '감성도배', src: '/villa7.jpeg' },
+  { id: 21, category: '단독주택', label: '단독주택 시공', sub: '준비 중', src: null },
+  { id: 22, category: '오피스텔', label: '오피스텔 시공', sub: '준비 중', src: null },
+  { id: 23, category: '상업공간', label: '상업공간 시공', sub: '준비 중', src: null },
 ];
 
 export default function Gallery() {
