@@ -50,10 +50,13 @@ const galleryItems = [
   { id: 34, category: '상업공간', label: '상업공간 시공', sub: '감성도배', src: '/commercial12.jpeg' },
 ];
 
+const PAGE_SIZE = 9;
+
 export default function Gallery() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('전체');
   const [hovered, setHovered] = useState<number | null>(null);
+  const [showCount, setShowCount] = useState(PAGE_SIZE);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -68,6 +71,14 @@ export default function Gallery() {
   const filtered = activeTab === '전체'
     ? galleryItems.filter(item => item.src)
     : galleryItems.filter(item => item.category === activeTab && item.src);
+
+  const visible = filtered.slice(0, showCount);
+  const hasMore = showCount < filtered.length;
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setShowCount(PAGE_SIZE);
+  };
 
   return (
     <section
@@ -101,7 +112,7 @@ export default function Gallery() {
           {tabs.map(tab => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
               className="px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105"
               style={{
                 background: activeTab === tab ? '#C4A882' : 'white',
@@ -134,7 +145,7 @@ export default function Gallery() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {filtered.map((item, idx) => (
+              {visible.map((item, idx) => (
                 /* 바깥 wrapper: fadeInUp 애니메이션만 담당 */
                 <div
                   key={`${activeTab}-${item.id}`}
@@ -207,6 +218,30 @@ export default function Gallery() {
             </div>
           )}
         </div>
+
+        {/* 더 보기 버튼 */}
+        {hasMore && (
+          <div className="mt-10 text-center">
+            <button
+              onClick={() => setShowCount(c => c + PAGE_SIZE)}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 active:scale-95"
+              style={{
+                background: 'white',
+                color: '#6B5344',
+                border: '1.5px solid #E8DDD0',
+                boxShadow: '0 4px 20px rgba(61,43,31,0.08)',
+              }}
+            >
+              더 보기
+              <span style={{ color: '#C4A882', fontSize: '12px' }}>
+                ({filtered.length - showCount}장 남음)
+              </span>
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+        )}
 
         {/* 하단 CTA */}
         <div className={`mt-14 text-center transition-all duration-700 delay-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
