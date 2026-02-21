@@ -68,9 +68,27 @@ export default function Gallery() {
     return () => observer.disconnect();
   }, []);
 
-  const filtered = activeTab === '전체'
-    ? galleryItems.filter(item => item.src)
-    : galleryItems.filter(item => item.category === activeTab && item.src);
+  const filtered = (() => {
+    if (activeTab !== '전체') {
+      return galleryItems.filter(item => item.category === activeTab && item.src);
+    }
+    // 전체 탭: 카테고리별로 번갈아 배치 (아파트→빌라→단독주택→상업공간→아파트→...)
+    const groups: Record<string, typeof galleryItems> = {};
+    galleryItems.filter(i => i.src).forEach(item => {
+      if (!groups[item.category]) groups[item.category] = [];
+      groups[item.category].push(item);
+    });
+    const order = ['아파트', '빌라', '단독주택', '상업공간'];
+    const cats = order.map(c => groups[c] ?? []);
+    const result: typeof galleryItems = [];
+    const maxLen = Math.max(...cats.map(g => g.length));
+    for (let i = 0; i < maxLen; i++) {
+      for (const group of cats) {
+        if (group[i]) result.push(group[i]);
+      }
+    }
+    return result;
+  })();
 
   const visible = filtered.slice(0, showCount);
   const hasMore = showCount < filtered.length;
