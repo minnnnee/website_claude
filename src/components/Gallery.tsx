@@ -346,23 +346,30 @@ export default function Gallery() {
 
           {/* 이미지 */}
           <div
-            className="relative mx-16 md:mx-24 overflow-hidden rounded-xl"
-            style={{ width: 'min(90vw, 520px)', height: 'min(80vh, 693px)' }}
+            className="relative"
             onClick={e => e.stopPropagation()}
           >
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={lbItem.image_url!}
               alt={lbItem.label}
-              fill
-              className="object-contain"
-              sizes="(max-width: 768px) 90vw, 520px"
-              quality={95}
+              style={{
+                display: 'block',
+                maxWidth: 'min(80vw, 480px)',
+                maxHeight: 'min(74vh, 640px)',
+                width: 'auto',
+                height: 'auto',
+                borderRadius: '12px',
+              }}
             />
 
             {/* 정보 오버레이 */}
             <div
-              className="absolute bottom-0 left-0 right-0 p-4 rounded-b-xl"
-              style={{ background: 'linear-gradient(to top, rgba(20,13,8,0.75) 0%, transparent 100%)' }}
+              className="absolute bottom-0 left-0 right-0 p-4"
+              style={{
+                background: 'linear-gradient(to top, rgba(20,13,8,0.75) 0%, transparent 100%)',
+                borderRadius: '0 0 12px 12px',
+              }}
             >
               <span
                 className="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full mb-1"
