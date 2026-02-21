@@ -347,6 +347,11 @@ export default function Gallery() {
           {/* 이미지 */}
           <div
             className="relative"
+            style={{
+              borderRadius: '12px',
+              overflow: 'hidden',
+              transform: 'translateZ(0)', // iOS Safari border-radius 렌더링 버그 수정
+            }}
             onClick={e => e.stopPropagation()}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -359,7 +364,6 @@ export default function Gallery() {
                 maxHeight: 'min(74vh, 640px)',
                 width: 'auto',
                 height: 'auto',
-                borderRadius: '12px',
               }}
             />
 
