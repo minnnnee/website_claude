@@ -22,6 +22,8 @@ export default function Gallery() {
   const [hovered, setHovered] = useState<number | null>(null);
   const [showCount, setShowCount] = useState(PAGE_SIZE);
   const [items, setItems] = useState<GalleryItem[]>([]);
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+  const [lbTouchStart, setLbTouchStart] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,11 +45,33 @@ export default function Gallery() {
       });
   }, []);
 
+  // 라이트박스 키보드 지원
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxIdx(null);
+      if (e.key === 'ArrowLeft') setLightboxIdx(i => (i !== null && i > 0 ? i - 1 : i));
+      if (e.key === 'ArrowRight') setLightboxIdx(i => (i !== null && i < filtered.length - 1 ? i + 1 : i));
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lightboxIdx]);
+
+  // 라이트박스 열릴 때 스크롤 잠금
+  useEffect(() => {
+    if (lightboxIdx !== null) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [lightboxIdx]);
+
   const filtered = (() => {
     if (activeTab !== '전체') {
       return items.filter(item => item.category === activeTab && item.image_url);
     }
-    // 전체 탭: 카테고리별로 번갈아 배치
     const groups: Record<string, GalleryItem[]> = {};
     items.filter(i => i.image_url).forEach(item => {
       if (!groups[item.category]) groups[item.category] = [];
@@ -72,6 +96,10 @@ export default function Gallery() {
     setActiveTab(tab);
     setShowCount(PAGE_SIZE);
   };
+
+  const lbItem = lightboxIdx !== null ? filtered[lightboxIdx] : null;
+  const lbPrev = () => setLightboxIdx(i => (i !== null && i > 0 ? i - 1 : i));
+  const lbNext = () => setLightboxIdx(i => (i !== null && i < filtered.length - 1 ? i + 1 : i));
 
   return (
     <section
@@ -138,71 +166,88 @@ export default function Gallery() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {visible.map((item, idx) => (
-                <div
-                  key={`${activeTab}-${item.id}`}
-                  style={{ animation: `fadeInUp 0.5s ease-out ${idx * 60}ms both` }}
-                >
+              {visible.map((item, idx) => {
+                const filteredIdx = filtered.indexOf(item);
+                return (
                   <div
-                    className="relative rounded-2xl overflow-hidden cursor-pointer"
-                    style={{
-                      aspectRatio: '3/4',
-                      boxShadow: hovered === item.id
-                        ? '0 20px 50px rgba(61,43,31,0.22)'
-                        : '0 4px 20px rgba(61,43,31,0.07)',
-                      transform: hovered === item.id ? 'scale(1.05)' : 'scale(1)',
-                      transition: 'transform 0.35s ease, box-shadow 0.35s ease',
-                      zIndex: hovered === item.id ? 1 : 0,
-                      position: 'relative',
-                    }}
-                    onMouseEnter={() => setHovered(item.id)}
-                    onMouseLeave={() => setHovered(null)}
+                    key={`${activeTab}-${item.id}`}
+                    style={{ animation: `fadeInUp 0.5s ease-out ${idx * 60}ms both` }}
                   >
-                  {item.image_url ? (
-                    <Image
-                      src={item.image_url}
-                      alt={item.label}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, 33vw"
-                    />
-                  ) : (
                     <div
-                      className="absolute inset-0 flex items-center justify-center"
-                      style={{ background: 'linear-gradient(135deg, #FAF7F2 0%, #E8DDD0 100%)' }}
+                      className="relative rounded-2xl overflow-hidden cursor-pointer"
+                      style={{
+                        aspectRatio: '3/4',
+                        boxShadow: hovered === item.id
+                          ? '0 20px 50px rgba(61,43,31,0.22)'
+                          : '0 4px 20px rgba(61,43,31,0.07)',
+                        transform: hovered === item.id ? 'scale(1.05)' : 'scale(1)',
+                        transition: 'transform 0.35s ease, box-shadow 0.35s ease',
+                        zIndex: hovered === item.id ? 1 : 0,
+                        position: 'relative',
+                      }}
+                      onMouseEnter={() => setHovered(item.id)}
+                      onMouseLeave={() => setHovered(null)}
+                      onClick={() => setLightboxIdx(filteredIdx)}
                     >
-                      <span style={{ color: '#C4A882', fontSize: '2rem' }}>🏠</span>
-                    </div>
-                  )}
+                      {item.image_url ? (
+                        <Image
+                          src={item.image_url}
+                          alt={item.label}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 50vw, 33vw"
+                        />
+                      ) : (
+                        <div
+                          className="absolute inset-0 flex items-center justify-center"
+                          style={{ background: 'linear-gradient(135deg, #FAF7F2 0%, #E8DDD0 100%)' }}
+                        >
+                          <span style={{ color: '#C4A882', fontSize: '2rem' }}>🏠</span>
+                        </div>
+                      )}
 
-                  <div
-                    className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full"
-                    style={{ background: 'rgba(255,255,255,0.85)', color: '#6B5344' }}
-                  >
-                    {item.category}
-                  </div>
-
-                  <div
-                    className="absolute inset-0 flex flex-col justify-end p-4 transition-all duration-300"
-                    style={{
-                      background: hovered === item.id
-                        ? 'linear-gradient(to top, rgba(61,43,31,0.7) 0%, transparent 55%)'
-                        : 'linear-gradient(to top, rgba(61,43,31,0.35) 0%, transparent 50%)',
-                    }}
-                  >
-                    <div style={{ color: 'white' }}>
-                      <div className="font-bold text-sm">{item.label}</div>
                       <div
-                        className="text-xs mt-0.5 transition-all duration-300"
-                        style={{ opacity: hovered === item.id ? 0.85 : 0.6 }}
+                        className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full"
+                        style={{ background: 'rgba(255,255,255,0.85)', color: '#6B5344' }}
                       >
-                        {item.sub}
+                        {item.category}
+                      </div>
+
+                      {/* 확대 아이콘 힌트 */}
+                      <div
+                        className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
+                        style={{
+                          background: 'rgba(255,255,255,0.85)',
+                          opacity: hovered === item.id ? 1 : 0,
+                        }}
+                      >
+                        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="#6B5344" strokeWidth={2.2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0zM11 8v6M8 11h6" />
+                        </svg>
+                      </div>
+
+                      <div
+                        className="absolute inset-0 flex flex-col justify-end p-4 transition-all duration-300"
+                        style={{
+                          background: hovered === item.id
+                            ? 'linear-gradient(to top, rgba(61,43,31,0.7) 0%, transparent 55%)'
+                            : 'linear-gradient(to top, rgba(61,43,31,0.35) 0%, transparent 50%)',
+                        }}
+                      >
+                        <div style={{ color: 'white' }}>
+                          <div className="font-bold text-sm">{item.label}</div>
+                          <div
+                            className="text-xs mt-0.5 transition-all duration-300"
+                            style={{ opacity: hovered === item.id ? 0.85 : 0.6 }}
+                          >
+                            {item.sub}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -258,6 +303,103 @@ export default function Gallery() {
           </div>
         </div>
       </div>
+
+      {/* ── 라이트박스 ── */}
+      {lbItem && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ background: 'rgba(20,13,8,0.92)', backdropFilter: 'blur(6px)' }}
+          onClick={() => setLightboxIdx(null)}
+          onTouchStart={e => setLbTouchStart(e.touches[0].clientX)}
+          onTouchEnd={e => {
+            const diff = lbTouchStart - e.changedTouches[0].clientX;
+            if (diff > 50) lbNext();
+            else if (diff < -50) lbPrev();
+          }}
+        >
+          {/* 닫기 버튼 */}
+          <button
+            className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{ background: 'rgba(255,255,255,0.15)', color: 'white' }}
+            onClick={e => { e.stopPropagation(); setLightboxIdx(null); }}
+          >
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* 이전 버튼 */}
+          <button
+            className="absolute left-3 md:left-6 z-10 w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+            style={{
+              background: 'rgba(255,255,255,0.15)',
+              color: 'white',
+              opacity: lightboxIdx === 0 ? 0.3 : 1,
+            }}
+            onClick={e => { e.stopPropagation(); lbPrev(); }}
+            disabled={lightboxIdx === 0}
+          >
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* 이미지 */}
+          <div
+            className="relative mx-16 md:mx-24"
+            style={{ width: 'min(90vw, 520px)', height: 'min(80vh, 693px)' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <Image
+              src={lbItem.image_url!}
+              alt={lbItem.label}
+              fill
+              className="object-contain rounded-2xl"
+              sizes="(max-width: 768px) 90vw, 520px"
+              quality={95}
+            />
+
+            {/* 정보 오버레이 */}
+            <div
+              className="absolute bottom-0 left-0 right-0 p-4 rounded-b-2xl"
+              style={{ background: 'linear-gradient(to top, rgba(20,13,8,0.75) 0%, transparent 100%)' }}
+            >
+              <span
+                className="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full mb-1"
+                style={{ background: 'rgba(196,168,130,0.35)', color: '#E8DDD0' }}
+              >
+                {lbItem.category}
+              </span>
+              <div className="font-bold text-white text-sm">{lbItem.label}</div>
+              <div className="text-xs mt-0.5" style={{ color: 'rgba(232,221,208,0.75)' }}>{lbItem.sub}</div>
+            </div>
+          </div>
+
+          {/* 다음 버튼 */}
+          <button
+            className="absolute right-3 md:right-6 z-10 w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+            style={{
+              background: 'rgba(255,255,255,0.15)',
+              color: 'white',
+              opacity: lightboxIdx === filtered.length - 1 ? 0.3 : 1,
+            }}
+            onClick={e => { e.stopPropagation(); lbNext(); }}
+            disabled={lightboxIdx === filtered.length - 1}
+          >
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          {/* 인디케이터 */}
+          <div
+            className="absolute bottom-5 left-0 right-0 text-center text-xs"
+            style={{ color: 'rgba(255,255,255,0.5)' }}
+          >
+            {(lightboxIdx ?? 0) + 1} / {filtered.length}
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes fadeInUp {
