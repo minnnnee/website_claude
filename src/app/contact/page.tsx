@@ -12,10 +12,10 @@ import FloatingButtons from '@/components/FloatingButtons';
 
 export default function ContactPage() {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-    }, 300);
-    return () => clearTimeout(timer);
+    const scroll = () => document.getElementById('contact')?.scrollIntoView({ behavior: 'instant' });
+    const t1 = setTimeout(scroll, 800);
+    const t2 = setTimeout(scroll, 1500);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   return (
