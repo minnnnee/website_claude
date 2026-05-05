@@ -10,7 +10,7 @@ import ContactForm from '@/components/ContactForm';
 import Footer from '@/components/Footer';
 import FloatingButtons from '@/components/FloatingButtons';
 
-export default function ReviewsPage() {
+export default function GalleryPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });

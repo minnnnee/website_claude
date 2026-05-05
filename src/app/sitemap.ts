@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: 'https://website-claude-brown.vercel.app/reviews',
+      url: 'https://website-claude-brown.vercel.app/gallery',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
